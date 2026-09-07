@@ -48,10 +48,12 @@ app.use(
     resave: false,
     saveUninitialized: false,
 
+    proxy: true,
+
     cookie: {
       httpOnly: true,
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
+      secure: true,
       maxAge: 1000 * 60 * 60 * 12
     }
   })
