@@ -1,0 +1,17 @@
+</main>
+<footer class="footer store-footer">
+  <div class="footer-brand"><img src="/img/logo-noroeste.png" alt="Noroeste Roleplay"><p>Mais que um jogo, uma realidade.</p></div>
+  <div class="footer-links"><a href="/">Início</a><a href="/#catalogo">Produtos</a><a href="/admin">Painel</a><a href="<%= discordUrl %>" target="_blank">Discord</a></div>
+  <div class="footer-copy"><b>Noroeste sempre com você!</b><p>Pagamentos processados pelo Mercado Pago.</p><p>© <%= new Date().getFullYear() %> Noroeste Roleplay.</p></div>
+</footer>
+
+<div class="cart-drawer" data-cart-drawer>
+  <div class="cart-head"><b>Seu carrinho</b><button data-cart-close>×</button></div>
+  <div data-cart-items class="cart-items"></div>
+  <a class="btn primary full disabled" data-cart-checkout href="#">Ir para pagamento</a>
+</div>
+<div class="cart-overlay" data-cart-close></div>
+<div class="store-toast" data-store-toast>Produto adicionado ao carrinho ✓</div>
+<script src="/js/store.js"></script>
+</body>
+</html>

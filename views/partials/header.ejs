@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#b20d18">
+  <title><%= title ? title + ' • ' : '' %><%= storeName %></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Orbitron:wght@600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>:root{--accent:<%= settings.accent || '#c1121f' %>}</style>
+</head>
+<body>
+<header class="topbar store-topbar">
+  <a class="brand" href="/" aria-label="Noroeste Roleplay">
+    <img class="brand-logo" src="/img/logo-noroeste.png" alt="Noroeste Roleplay">
+  </a>
+
+  <nav class="store-nav" aria-label="Navegação principal">
+    <a class="nav-home" href="/">⌂ <span>Início</span></a>
+    <a href="/#vips">VIPs</a>
+    <a href="/#catalogo" data-jump-filter="Carros">Carros</a>
+    <a href="/#catalogo" data-jump-filter="Motos">Motos</a>
+    <a href="/#catalogo" data-jump-filter="Coins">Coins</a>
+    <a href="/#catalogo" data-jump-filter="Casas">Casas</a>
+    <a href="/#catalogo" data-jump-filter="Extras">Outros</a>
+  </nav>
+
+  <div class="top-actions">
+    <label class="product-search" aria-label="Buscar produtos">
+      <span>⌕</span>
+      <input type="search" placeholder="Buscar produtos..." data-product-search>
+    </label>
+    <button class="cart-btn icon-cart" data-cart-open aria-label="Abrir carrinho">🛒 <span data-cart-count>0</span></button>
+    <a class="login-link" href="/admin">♟ <span>Entrar</span></a>
+  </div>
+</header>
+<main>

@@ -1,0 +1,121 @@
+<%- include('partials/header', { title: 'Loja Oficial' }) %>
+<%
+  const byId = id => products.find(p => p.id === id) || null;
+  const vipCards = [
+    { product: byId('vip-bronze'), tier:'bronze', label:'BRONZE', icon:'♛', benefits:['Tag exclusiva no chat','Salário extra','Acesso a veículos exclusivos','Acesso a áreas exclusivas','Suporte prioritário'] },
+    { product: byId('vip-prata'), tier:'prata', label:'PRATA', icon:'♛', benefits:['Tudo do Bronze','Veículos melhores','Salário aumentado','Acesso a propriedades exclusivas','Descontos na loja'] },
+    { product: byId('vip-ouro'), tier:'ouro', label:'OURO', icon:'♛', benefits:['Tudo do Prata','Veículos premium','Salário ainda maior','Acesso a mansões exclusivas','Personalização exclusiva','Prioridade total'] },
+    { product: byId('vip-diamante'), tier:'diamante', label:'DIAMANTE', icon:'◆', benefits:['Todos os benefícios anteriores','Veículos ultra exclusivos','Salário máximo','Acesso total a todas as áreas','Customizações especiais','Benefícios únicos','Suporte VIP 24/7'] }
+  ].filter(v => v.product);
+  const categoryCards = [
+    {name:'Carros', icon:'🏎', sub:'Veículos exclusivos'},
+    {name:'Motos', icon:'🏍', sub:'Motos premium'},
+    {name:'Coins', icon:'◉', sub:'Pacotes de coins'},
+    {name:'Casas', icon:'⌂', sub:'Mansões e propriedades'},
+    {name:'Extras', label:'Outros', icon:'✦', sub:'Diversos itens'}
+  ];
+%>
+
+<section class="home-hero">
+  <div class="hero-atmosphere" aria-hidden="true"></div>
+  <div class="hero-content-wrap">
+    <div class="home-hero-copy">
+      <span class="hero-kicker">LOJA OFICIAL NOROESTE ROLEPLAY</span>
+      <h1>ENTRE E VIVA A<br><strong>NOVA REALIDADE</strong></h1>
+      <p>Adquira VIPs, veículos, coins e muito mais de forma segura, rápida e sem burocracia. Tudo para você aproveitar o melhor da Noroeste Roleplay.</p>
+      <div class="home-hero-actions">
+        <a class="btn hero-primary" href="#vips">🛒 VER PRODUTOS</a>
+        <a class="btn hero-secondary" href="<%= discordUrl %>" target="_blank" rel="noreferrer">◉ ENTRAR NO DISCORD</a>
+      </div>
+      <div class="hero-trust">
+        <div><span>⬟</span><p><b>Pagamento Seguro</b><small>Via Mercado Pago</small></p></div>
+        <div><span>ϟ</span><p><b>Entrega Organizada</b><small>Após a confirmação</small></p></div>
+        <div><span>◉</span><p><b>Suporte</b><small>Equipe Noroeste</small></p></div>
+      </div>
+    </div>
+
+    <div class="home-hero-brand">
+      <div class="city-glow"></div>
+      <img src="/img/logo-noroeste.png" alt="Noroeste Roleplay">
+      <div class="hero-car-lines" aria-hidden="true"><i></i><i></i></div>
+      <div class="hero-motto"><span>MAIS<br>QUE UM JOGO<br>UMA REALIDADE.</span><b>Noroeste<br>Sempre com você!</b></div>
+    </div>
+  </div>
+</section>
+
+<section id="vips" class="vip-section store-section">
+  <div class="store-section-title">
+    <div><h2>VIPs</h2><p>Tenha benefícios exclusivos e viva o melhor da cidade.</p></div>
+    <a href="#catalogo" class="see-all" data-jump-filter="VIP">Ver todos →</a>
+  </div>
+
+  <div class="vip-grid">
+    <% vipCards.forEach(vip => { %>
+      <article class="vip-card vip-<%= vip.tier %>">
+        <div class="vip-shine"></div>
+        <img class="vip-logo" src="/img/logo-noroeste.png" alt="Noroeste Roleplay">
+        <div class="vip-symbol"><%= vip.icon %></div>
+        <div class="vip-name"><small>VIP</small><strong><%= vip.label %></strong></div>
+        <div class="vip-benefits">
+          <% vip.benefits.forEach((benefit, i) => { %>
+            <div><span><%= ['♛','♟','▣','⌂','★','◆','∞'][i % 7] %></span><%= benefit %></div>
+          <% }) %>
+        </div>
+        <div class="vip-spacer"></div>
+        <div class="vip-price"><b>R$ <%= vip.product.price.toFixed(2).replace('.', ',') %></b><small>POR MÊS</small></div>
+        <button class="vip-buy" data-add-cart data-id="<%= vip.product.id %>" data-name="<%= vip.product.name %>" data-price="<%= vip.product.price %>" data-image="/img/logo-noroeste.png">🛒 COMPRAR AGORA</button>
+      </article>
+    <% }) %>
+  </div>
+</section>
+
+<section class="category-showcase store-section compact-section">
+  <div class="category-grid">
+    <% categoryCards.forEach(cat => { %>
+      <a class="category-tile category-<%= cat.name.toLowerCase() %>" href="#catalogo" data-jump-filter="<%= cat.name %>">
+        <span class="category-big-icon"><%= cat.icon %></span>
+        <div><b><%= cat.label || cat.name %></b><small><%= cat.sub %></small></div>
+      </a>
+    <% }) %>
+  </div>
+</section>
+
+<section id="catalogo" class="store-section catalog-section">
+  <div class="store-section-title catalog-heading">
+    <div><span class="section-mini">CATÁLOGO COMPLETO</span><h2>Todos os produtos</h2><p>Use as categorias ou a busca para encontrar o que procura.</p></div>
+    <div class="filters catalog-filters">
+      <button class="active" data-filter="all">Todos</button>
+      <% [...new Set(products.map(p=>p.category))].forEach(c => { %><button data-filter="<%= c %>"><%= c %></button><% }) %>
+    </div>
+  </div>
+
+  <div class="product-grid modern-product-grid">
+    <% products.forEach(product => { %>
+      <article class="product-card modern-product-card" data-category="<%= product.category %>" data-product-name="<%= product.name.toLowerCase() %> <%= product.category.toLowerCase() %>">
+        <a href="/produto/<%= product.id %>" class="product-image">
+          <img src="<%= product.category === 'VIP' ? '/img/logo-noroeste.png' : product.image %>" alt="<%= product.name %>">
+          <% if(product.featured){ %><span class="badge">DESTAQUE</span><% } %>
+        </a>
+        <div class="product-body">
+          <span class="category"><%= product.category %></span>
+          <h3><%= product.name %></h3>
+          <p><%= product.description %></p>
+          <div class="product-bottom">
+            <div><small>A partir de</small><strong>R$ <%= product.price.toFixed(2).replace('.', ',') %></strong></div>
+            <button class="btn primary small" data-add-cart data-id="<%= product.id %>" data-name="<%= product.name %>" data-price="<%= product.price %>" data-image="<%= product.category === 'VIP' ? '/img/logo-noroeste.png' : product.image %>">Adicionar</button>
+          </div>
+        </div>
+      </article>
+    <% }) %>
+  </div>
+  <div class="search-empty" data-search-empty hidden>Nenhum produto encontrado.</div>
+</section>
+
+<section class="store-benefits">
+  <div><span>♚</span><b>COMUNIDADE ATIVA</b></div>
+  <div><span>⬟</span><b>AMBIENTE SEGURO</b></div>
+  <div><span>◈</span><b>ECONOMIA REALISTA</b></div>
+  <div><span>♛</span><b>EXPERIÊNCIA ÚNICA</b></div>
+</section>
+
+<%- include('partials/footer') %>

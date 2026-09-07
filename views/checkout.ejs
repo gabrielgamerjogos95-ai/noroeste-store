@@ -1,0 +1,16 @@
+<%- include('partials/header', { title: 'Checkout' }) %>
+<section class="checkout-wrap">
+  <div class="checkout-form"><span class="eyebrow">FINALIZAR COMPRA</span><h1>Seus dados</h1><p>Esses dados serão usados para identificar e entregar seu pedido.</p>
+  <% if(error){ %><div class="alert error"><%= error %></div><% } %>
+  <form method="post" action="/checkout/criar">
+    <% products.forEach(p => { %><input type="hidden" name="productIds" value="<%= p.id %>"><% }) %>
+    <label>Nome completo<input required name="name" autocomplete="name" placeholder="Seu nome"></label>
+    <label>E-mail<input required type="email" name="email" autocomplete="email" placeholder="voce@email.com"></label>
+    <div class="form-row"><label>Discord<input name="discord" placeholder="usuario ou ID"></label><label>ID FiveM<input name="fivemId" placeholder="ID na cidade"></label></div>
+    <label>Cupom<input name="coupon" placeholder="Ex.: NOROESTE10"></label>
+    <button class="btn primary full" type="submit">Pagar com Mercado Pago</button>
+    <small class="secure">🔒 Você será redirecionado ao Checkout Pro do Mercado Pago.</small>
+  </form></div>
+  <aside class="order-summary"><h2>Resumo</h2><% let total=0; products.forEach(p => { total += p.price; %><div class="summary-item"><img src="<%= p.image %>"><div><b><%= p.name %></b><small><%= p.category %></small></div><strong>R$ <%= p.price.toFixed(2).replace('.', ',') %></strong></div><% }) %><div class="summary-total"><span>Total</span><b>R$ <%= total.toFixed(2).replace('.', ',') %></b></div><p>* Um cupom válido pode reduzir o total antes da criação do pagamento.</p></aside>
+</section>
+<%- include('partials/footer') %>

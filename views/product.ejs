@@ -1,0 +1,6 @@
+<%- include('partials/header', { title: product.name }) %>
+<section class="product-page">
+  <div class="product-page-image"><img src="<%= product.image %>" alt="<%= product.name %>"></div>
+  <div class="product-page-copy"><span class="eyebrow"><%= product.category %></span><h1><%= product.name %></h1><p><%= product.description %></p><div class="big-price">R$ <%= product.price.toFixed(2).replace('.', ',') %></div><button class="btn primary" data-add-cart data-id="<%= product.id %>" data-name="<%= product.name %>" data-price="<%= product.price %>" data-image="<%= product.image %>">Adicionar ao carrinho</button><a class="btn ghost" href="/checkout?items=<%= product.id %>">Comprar agora</a><div class="notice">A entrega ocorre somente após a confirmação real do pagamento pelo Mercado Pago.</div></div>
+</section>
+<%- include('partials/footer') %>
