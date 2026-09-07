@@ -136,7 +136,7 @@ app.post('/api/mercadopago/webhook', async (req, res) => {
   }
 });
 
-app.get('/admin/login', (req, res) => res.render('admin-login', { error: null }));
+app.get('/admin/login' (req, res) => res.render('admin-login', { error: null }));
 app.post('/admin/login', async (req, res) => {
   const emailOk = String(req.body.email || '') === String(process.env.ADMIN_EMAIL || 'admin@noroeste.local');
   const plain = String(process.env.ADMIN_PASSWORD || 'troque-esta-senha');
@@ -145,7 +145,7 @@ app.post('/admin/login', async (req, res) => {
   req.session.admin = true;
   res.redirect('/admin');
 });
-app.post('/admin/logout', (req, res) => req.session.destroy(() => res.redirect('/admin/login')));
+app.get('/admin/login' (req, res) => req.session.destroy(() => res.redirect('/admin/login')));
 
 app.get('/admin', requireAdmin, (req, res) => {
   const data = db.read();
