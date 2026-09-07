@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import session from 'express-session';
+import bcrypt from 'bcryptjs';
 import crypto from 'node:crypto';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -18,22 +19,11 @@ app.set('views', path.join(__dirname, '..', 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'public')));
-
-// Render fica atrás de um proxy HTTPS. Sem isto, o cookie de sessão
-// pode não ser gravado e o /admin volta para a tela de login.
-app.set('trust proxy', 1);
 app.use(session({
-  name: 'noroeste.sid',
   secret: process.env.SESSION_SECRET || 'dev-session-secret-change-me',
   resave: false,
   saveUninitialized: false,
-  proxy: true,
-  cookie: {
-    httpOnly: true,
-    sameSite: 'lax',
-    secure: 'auto',
-    maxAge: 1000 * 60 * 60 * 12
-  }
+  cookie: { httpOnly: true, sameSite: 'lax', secure: BASE_URL.startsWith('https://'), maxAge: 1000 * 60 * 60 * 12 }
 }));
 
 app.use((req, res, next) => {
@@ -146,43 +136,14 @@ app.post('/api/mercadopago/webhook', async (req, res) => {
   }
 });
 
-app.get('/admin/login', (req, res) => {
-  if (req.session?.admin) return res.redirect('/admin');
-  return res.render('admin-login', { error: null });
-});
-
-app.post('/admin/login', (req, res) => {
-  const email = String(req.body.email || '').trim().toLowerCase();
-  const password = String(req.body.password || '');
-  const adminEmail = String(process.env.ADMIN_EMAIL || '').trim().toLowerCase();
-  const adminPassword = String(process.env.ADMIN_PASSWORD || '');
-
-  if (!adminEmail || !adminPassword) {
-    return res.status(500).render('admin-login', { error: 'ADMIN_EMAIL ou ADMIN_PASSWORD não configurados no Render.' });
-  }
-
-  if (email !== adminEmail || password !== adminPassword) {
-    return res.status(401).render('admin-login', { error: 'E-mail ou senha inválidos.' });
-  }
-
-  // Regenera a sessão após o login e força a gravação antes do redirect.
-  req.session.regenerate((regenError) => {
-    if (regenError) {
-      console.error('Erro ao regenerar sessão:', regenError);
-      return res.status(500).render('admin-login', { error: 'Não foi possível iniciar a sessão.' });
-    }
-
-    req.session.admin = true;
-    req.session.adminEmail = adminEmail;
-
-    req.session.save((saveError) => {
-      if (saveError) {
-        console.error('Erro ao salvar sessão:', saveError);
-        return res.status(500).render('admin-login', { error: 'Não foi possível salvar a sessão.' });
-      }
-      return res.redirect('/admin');
-    });
-  });
+app.get('/admin/login', (req, res) => res.render('admin-login', { error: null }));
+app.post('/admin/login', async (req, res) => {
+  const emailOk = String(req.body.email || '') === String(process.env.ADMIN_EMAIL || 'admin@noroeste.local');
+  const plain = String(process.env.ADMIN_PASSWORD || 'troque-esta-senha');
+  const passwordOk = await bcrypt.compare(String(req.body.password || ''), await bcrypt.hash(plain, 10));
+  if (!emailOk || !passwordOk) return res.status(401).render('admin-login', { error: 'Login inválido.' });
+  req.session.admin = true;
+  res.redirect('/admin');
 });
 app.post('/admin/logout', (req, res) => req.session.destroy(() => res.redirect('/admin/login')));
 
